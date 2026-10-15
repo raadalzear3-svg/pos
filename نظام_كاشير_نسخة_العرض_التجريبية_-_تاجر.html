@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>تاجر برو | نظام الكاشير والفواتير وإدارة الديون</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&amp;display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f3f4f6; }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-invoice, #printable-invoice * { visibility: visible; }
+            #printable-invoice { position: absolute; left: 0; top: 0; width: 100%; background: white; padding: 20px; box-shadow: none; }
+            .no-print { display: none !important; }
+        }
+    </style>
+<style>*, ::before, ::after{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }::backdrop{--tw-border-spacing-x:0;--tw-border-spacing-y:0;--tw-translate-x:0;--tw-translate-y:0;--tw-rotate:0;--tw-skew-x:0;--tw-skew-y:0;--tw-scale-x:1;--tw-scale-y:1;--tw-pan-x: ;--tw-pan-y: ;--tw-pinch-zoom: ;--tw-scroll-snap-strictness:proximity;--tw-gradient-from-position: ;--tw-gradient-via-position: ;--tw-gradient-to-position: ;--tw-ordinal: ;--tw-slashed-zero: ;--tw-numeric-figure: ;--tw-numeric-spacing: ;--tw-numeric-fraction: ;--tw-ring-inset: ;--tw-ring-offset-width:0px;--tw-ring-offset-color:#fff;--tw-ring-color:rgb(59 130 246 / 0.5);--tw-ring-offset-shadow:0 0 #0000;--tw-ring-shadow:0 0 #0000;--tw-shadow:0 0 #0000;--tw-shadow-colored:0 0 #0000;--tw-blur: ;--tw-brightness: ;--tw-contrast: ;--tw-grayscale: ;--tw-hue-rotate: ;--tw-invert: ;--tw-saturate: ;--tw-sepia: ;--tw-drop-shadow: ;--tw-backdrop-blur: ;--tw-backdrop-brightness: ;--tw-backdrop-contrast: ;--tw-backdrop-grayscale: ;--tw-backdrop-hue-rotate: ;--tw-backdrop-invert: ;--tw-backdrop-opacity: ;--tw-backdrop-saturate: ;--tw-backdrop-sepia: ;--tw-contain-size: ;--tw-contain-layout: ;--tw-contain-paint: ;--tw-contain-style: }/* ! tailwindcss v3.4.17 | MIT License | https://tailwindcss.com */*,::after,::before{box-sizing:border-box;border-width:0;border-style:solid;border-color:#e5e7eb}::after,::before{--tw-content:''}:host,html{line-height:1.5;-webkit-text-size-adjust:100%;-moz-tab-size:4;tab-size:4;font-family:ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";font-feature-settings:normal;font-variation-settings:normal;-webkit-tap-highlight-color:transparent}body{margin:0;line-height:inherit}hr{height:0;color:inherit;border-top-width:1px}abbr:where([title]){-webkit-text-decoration:underline dotted;text-decoration:underline dotted}h1,h2,h3,h4,h5,h6{font-size:inherit;font-weight:inherit}a{color:inherit;text-decoration:inherit}b,strong{font-weight:bolder}code,kbd,pre,samp{font-family:ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;font-feature-settings:normal;font-variation-settings:normal;font-size:1em}small{font-size:80%}sub,sup{font-size:75%;line-height:0;position:relative;vertical-align:baseline}sub{bottom:-.25em}sup{top:-.5em}table{text-indent:0;border-color:inherit;border-collapse:collapse}button,input,optgroup,select,textarea{font-family:inherit;font-feature-settings:inherit;font-variation-settings:inherit;font-size:100%;font-weight:inherit;line-height:inherit;letter-spacing:inherit;color:inherit;margin:0;padding:0}button,select{text-transform:none}button,input:where([type=button]),input:where([type=reset]),input:where([type=submit]){-webkit-appearance:button;background-color:transparent;background-image:none}:-moz-focusring{outline:auto}:-moz-ui-invalid{box-shadow:none}progress{vertical-align:baseline}::-webkit-inner-spin-button,::-webkit-outer-spin-button{height:auto}[type=search]{-webkit-appearance:textfield;outline-offset:-2px}::-webkit-search-decoration{-webkit-appearance:none}::-webkit-file-upload-button{-webkit-appearance:button;font:inherit}summary{display:list-item}blockquote,dd,dl,figure,h1,h2,h3,h4,h5,h6,hr,p,pre{margin:0}fieldset{margin:0;padding:0}legend{padding:0}menu,ol,ul{list-style:none;margin:0;padding:0}dialog{padding:0}textarea{resize:vertical}input::placeholder,textarea::placeholder{opacity:1;color:#9ca3af}[role=button],button{cursor:pointer}:disabled{cursor:default}audio,canvas,embed,iframe,img,object,svg,video{display:block;vertical-align:middle}img,video{max-width:100%;height:auto}[hidden]:where(:not([hidden=until-found])){display:none}.fixed{position:fixed}.inset-0{inset:0px}.z-50{z-index:50}.mx-auto{margin-left:auto;margin-right:auto}.mb-1{margin-bottom:0.25rem}.mb-3{margin-bottom:0.75rem}.mb-4{margin-bottom:1rem}.ml-1{margin-left:0.25rem}.ml-2{margin-left:0.5rem}.mt-1{margin-top:0.25rem}.mt-2{margin-top:0.5rem}.mt-6{margin-top:1.5rem}.mt-8{margin-top:2rem}.mt-3{margin-top:0.75rem}.block{display:block}.flex{display:flex}.grid{display:grid}.hidden{display:none}.h-4{height:1rem}.max-h-52{max-height:13rem}.max-h-\[480px\]{max-height:480px}.min-h-screen{min-height:100vh}.w-24{width:6rem}.w-4{width:1rem}.w-48{width:12rem}.w-full{width:100%}.max-w-7xl{max-width:80rem}.max-w-lg{max-width:32rem}.max-w-md{max-width:28rem}.cursor-pointer{cursor:pointer}.grid-cols-1{grid-template-columns:repeat(1, minmax(0, 1fr))}.grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.flex-col{flex-direction:column}.flex-wrap{flex-wrap:wrap}.items-center{align-items:center}.justify-center{justify-content:center}.justify-between{justify-content:space-between}.gap-1{gap:0.25rem}.gap-2{gap:0.5rem}.gap-3{gap:0.75rem}.gap-4{gap:1rem}.gap-6{gap:1.5rem}.space-y-1 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.25rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.25rem * var(--tw-space-y-reverse))}.space-y-2 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.5rem * var(--tw-space-y-reverse))}.space-y-3 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(0.75rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(0.75rem * var(--tw-space-y-reverse))}.space-y-4 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1rem * var(--tw-space-y-reverse))}.space-y-6 > :not([hidden]) ~ :not([hidden]){--tw-space-y-reverse:0;margin-top:calc(1.5rem * calc(1 - var(--tw-space-y-reverse)));margin-bottom:calc(1.5rem * var(--tw-space-y-reverse))}.divide-y > :not([hidden]) ~ :not([hidden]){--tw-divide-y-reverse:0;border-top-width:calc(1px * calc(1 - var(--tw-divide-y-reverse)));border-bottom-width:calc(1px * var(--tw-divide-y-reverse))}.overflow-x-auto{overflow-x:auto}.overflow-y-auto{overflow-y:auto}.rounded{border-radius:0.25rem}.rounded-2xl{border-radius:1rem}.rounded-full{border-radius:9999px}.rounded-lg{border-radius:0.5rem}.rounded-xl{border-radius:0.75rem}.rounded-l-lg{border-top-left-radius:0.5rem;border-bottom-left-radius:0.5rem}.rounded-r-lg{border-top-right-radius:0.5rem;border-bottom-right-radius:0.5rem}.border{border-width:1px}.border-b{border-bottom-width:1px}.border-r-4{border-right-width:4px}.border-t{border-top-width:1px}.border-t-4{border-top-width:4px}.border-amber-200{--tw-border-opacity:1;border-color:rgb(253 230 138 / var(--tw-border-opacity, 1))}.border-amber-500{--tw-border-opacity:1;border-color:rgb(245 158 11 / var(--tw-border-opacity, 1))}.border-blue-500{--tw-border-opacity:1;border-color:rgb(59 130 246 / var(--tw-border-opacity, 1))}.border-emerald-200{--tw-border-opacity:1;border-color:rgb(167 243 208 / var(--tw-border-opacity, 1))}.border-emerald-500{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.border-red-500{--tw-border-opacity:1;border-color:rgb(239 68 68 / var(--tw-border-opacity, 1))}.border-gray-200{--tw-border-opacity:1;border-color:rgb(229 231 235 / var(--tw-border-opacity, 1))}.border-red-300{--tw-border-opacity:1;border-color:rgb(252 165 165 / var(--tw-border-opacity, 1))}.bg-amber-50{--tw-bg-opacity:1;background-color:rgb(255 251 235 / var(--tw-bg-opacity, 1))}.bg-amber-500{--tw-bg-opacity:1;background-color:rgb(245 158 11 / var(--tw-bg-opacity, 1))}.bg-black\/60{background-color:rgb(0 0 0 / 0.6)}.bg-blue-600{--tw-bg-opacity:1;background-color:rgb(37 99 235 / var(--tw-bg-opacity, 1))}.bg-emerald-50{--tw-bg-opacity:1;background-color:rgb(236 253 245 / var(--tw-bg-opacity, 1))}.bg-emerald-500{--tw-bg-opacity:1;background-color:rgb(16 185 129 / var(--tw-bg-opacity, 1))}.bg-emerald-600{--tw-bg-opacity:1;background-color:rgb(5 150 105 / var(--tw-bg-opacity, 1))}.bg-gray-100{--tw-bg-opacity:1;background-color:rgb(243 244 246 / var(--tw-bg-opacity, 1))}.bg-gray-200{--tw-bg-opacity:1;background-color:rgb(229 231 235 / var(--tw-bg-opacity, 1))}.bg-gray-50{--tw-bg-opacity:1;background-color:rgb(249 250 251 / var(--tw-bg-opacity, 1))}.bg-green-500{--tw-bg-opacity:1;background-color:rgb(34 197 94 / var(--tw-bg-opacity, 1))}.bg-red-100{--tw-bg-opacity:1;background-color:rgb(254 226 226 / var(--tw-bg-opacity, 1))}.bg-red-500{--tw-bg-opacity:1;background-color:rgb(239 68 68 / var(--tw-bg-opacity, 1))}.bg-red-600{--tw-bg-opacity:1;background-color:rgb(220 38 38 / var(--tw-bg-opacity, 1))}.bg-slate-800{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.bg-slate-900{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.bg-white{--tw-bg-opacity:1;background-color:rgb(255 255 255 / var(--tw-bg-opacity, 1))}.bg-emerald-100{--tw-bg-opacity:1;background-color:rgb(209 250 229 / var(--tw-bg-opacity, 1))}.bg-red-50{--tw-bg-opacity:1;background-color:rgb(254 242 242 / var(--tw-bg-opacity, 1))}.p-1{padding:0.25rem}.p-2\.5{padding:0.625rem}.p-3{padding:0.75rem}.p-4{padding:1rem}.p-5{padding:1.25rem}.p-6{padding:1.5rem}.px-2{padding-left:0.5rem;padding-right:0.5rem}.px-3{padding-left:0.75rem;padding-right:0.75rem}.px-4{padding-left:1rem;padding-right:1rem}.py-0\.5{padding-top:0.125rem;padding-bottom:0.125rem}.py-1{padding-top:0.25rem;padding-bottom:0.25rem}.py-1\.5{padding-top:0.375rem;padding-bottom:0.375rem}.py-2{padding-top:0.5rem;padding-bottom:0.5rem}.py-2\.5{padding-top:0.625rem;padding-bottom:0.625rem}.py-3{padding-top:0.75rem;padding-bottom:0.75rem}.py-4{padding-top:1rem;padding-bottom:1rem}.py-6{padding-top:1.5rem;padding-bottom:1.5rem}.pb-2{padding-bottom:0.5rem}.pb-3{padding-bottom:0.75rem}.pb-4{padding-bottom:1rem}.pt-1{padding-top:0.25rem}.pt-2{padding-top:0.5rem}.pt-3{padding-top:0.75rem}.text-left{text-align:left}.text-center{text-align:center}.text-right{text-align:right}.text-2xl{font-size:1.5rem;line-height:2rem}.text-3xl{font-size:1.875rem;line-height:2.25rem}.text-base{font-size:1rem;line-height:1.5rem}.text-lg{font-size:1.125rem;line-height:1.75rem}.text-sm{font-size:0.875rem;line-height:1.25rem}.text-xl{font-size:1.25rem;line-height:1.75rem}.text-xs{font-size:0.75rem;line-height:1rem}.font-bold{font-weight:700}.font-extrabold{font-weight:800}.leading-relaxed{line-height:1.625}.text-amber-100{--tw-text-opacity:1;color:rgb(254 243 199 / var(--tw-text-opacity, 1))}.text-blue-100{--tw-text-opacity:1;color:rgb(219 234 254 / var(--tw-text-opacity, 1))}.text-blue-600{--tw-text-opacity:1;color:rgb(37 99 235 / var(--tw-text-opacity, 1))}.text-emerald-100{--tw-text-opacity:1;color:rgb(209 250 229 / var(--tw-text-opacity, 1))}.text-emerald-600{--tw-text-opacity:1;color:rgb(5 150 105 / var(--tw-text-opacity, 1))}.text-emerald-700{--tw-text-opacity:1;color:rgb(4 120 87 / var(--tw-text-opacity, 1))}.text-emerald-800{--tw-text-opacity:1;color:rgb(6 95 70 / var(--tw-text-opacity, 1))}.text-gray-400{--tw-text-opacity:1;color:rgb(156 163 175 / var(--tw-text-opacity, 1))}.text-gray-500{--tw-text-opacity:1;color:rgb(107 114 128 / var(--tw-text-opacity, 1))}.text-gray-600{--tw-text-opacity:1;color:rgb(75 85 99 / var(--tw-text-opacity, 1))}.text-gray-700{--tw-text-opacity:1;color:rgb(55 65 81 / var(--tw-text-opacity, 1))}.text-gray-800{--tw-text-opacity:1;color:rgb(31 41 55 / var(--tw-text-opacity, 1))}.text-red-100{--tw-text-opacity:1;color:rgb(254 226 226 / var(--tw-text-opacity, 1))}.text-red-600{--tw-text-opacity:1;color:rgb(220 38 38 / var(--tw-text-opacity, 1))}.text-red-700{--tw-text-opacity:1;color:rgb(185 28 28 / var(--tw-text-opacity, 1))}.text-slate-200{--tw-text-opacity:1;color:rgb(226 232 240 / var(--tw-text-opacity, 1))}.text-slate-400{--tw-text-opacity:1;color:rgb(148 163 184 / var(--tw-text-opacity, 1))}.text-slate-900{--tw-text-opacity:1;color:rgb(15 23 42 / var(--tw-text-opacity, 1))}.text-white{--tw-text-opacity:1;color:rgb(255 255 255 / var(--tw-text-opacity, 1))}.shadow-2xl{--tw-shadow:0 25px 50px -12px rgb(0 0 0 / 0.25);--tw-shadow-colored:0 25px 50px -12px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-lg{--tw-shadow:0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);--tw-shadow-colored:0 10px 15px -3px var(--tw-shadow-color), 0 4px 6px -4px var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.shadow-sm{--tw-shadow:0 1px 2px 0 rgb(0 0 0 / 0.05);--tw-shadow-colored:0 1px 2px 0 var(--tw-shadow-color);box-shadow:var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow)}.transition{transition-property:color, background-color, border-color, fill, stroke, opacity, box-shadow, transform, filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;transition-property:color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter, -webkit-text-decoration-color, -webkit-backdrop-filter;transition-timing-function:cubic-bezier(0.4, 0, 0.2, 1);transition-duration:150ms}.hover\:border-emerald-500:hover{--tw-border-opacity:1;border-color:rgb(16 185 129 / var(--tw-border-opacity, 1))}.hover\:bg-blue-700:hover{--tw-bg-opacity:1;background-color:rgb(29 78 216 / var(--tw-bg-opacity, 1))}.hover\:bg-emerald-700:hover{--tw-bg-opacity:1;background-color:rgb(4 120 87 / var(--tw-bg-opacity, 1))}.hover\:bg-gray-300:hover{--tw-bg-opacity:1;background-color:rgb(209 213 219 / var(--tw-bg-opacity, 1))}.hover\:bg-green-600:hover{--tw-bg-opacity:1;background-color:rgb(22 163 74 / var(--tw-bg-opacity, 1))}.hover\:bg-red-200:hover{--tw-bg-opacity:1;background-color:rgb(254 202 202 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-700:hover{--tw-bg-opacity:1;background-color:rgb(51 65 85 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-800:hover{--tw-bg-opacity:1;background-color:rgb(30 41 59 / var(--tw-bg-opacity, 1))}.hover\:bg-slate-900:hover{--tw-bg-opacity:1;background-color:rgb(15 23 42 / var(--tw-bg-opacity, 1))}.hover\:text-red-500:hover{--tw-text-opacity:1;color:rgb(239 68 68 / var(--tw-text-opacity, 1))}.hover\:text-slate-800:hover{--tw-text-opacity:1;color:rgb(30 41 59 / var(--tw-text-opacity, 1))}.focus\:outline-emerald-500:focus{outline-color:#10b981}@media (min-width: 640px){.sm\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}.sm\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.sm\:grid-cols-5{grid-template-columns:repeat(5, minmax(0, 1fr))}}@media (min-width: 768px){.md\:grid-cols-2{grid-template-columns:repeat(2, minmax(0, 1fr))}}@media (min-width: 1024px){.lg\:col-span-2{grid-column:span 2 / span 2}.lg\:grid-cols-3{grid-template-columns:repeat(3, minmax(0, 1fr))}.lg\:grid-cols-4{grid-template-columns:repeat(4, minmax(0, 1fr))}}</style></head>
+<body class="text-gray-800 flex flex-col min-h-screen justify-between">
+
+    <div>
+        <!-- الشريط العلوي -->
+        <header class="bg-slate-900 text-white shadow-lg no-print">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-emerald-500 p-2.5 rounded-lg text-white">
+                        <i class="fa-solid fa-cash-register text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 id="header-store-name" class="text-xl font-bold">متجر النخبة التجاري (نسخة العرض)</h1>
+                        <p class="text-xs text-slate-400">نظام إدارة المبيعات والمخزون والديون المتكامل</p>
+                    </div>
+                </div>
+                <nav class="flex flex-wrap gap-2">
+                    <button onclick="switchTab('pos')" id="tab-btn-pos" class="tab-btn px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2 bg-emerald-600 text-white">
+                        <i class="fa-solid fa-cart-shopping"></i> نقطة البيع (الكاشير)
+                    </button>
+                    <button onclick="switchTab('inventory')" id="tab-btn-inventory" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-boxes-stacked"></i> المخزون والمنتجات
+                    </button>
+                    <button onclick="switchTab('debts')" id="tab-btn-debts" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> الفواتير ودفتر الديون
+                        <span id="debt-badge" class="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                    </button>
+                    <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2 rounded-lg text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> بيانات الترخيص والنسخ الاحتياطي
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- لوحة الإحصائيات السريعة -->
+        <section class="max-w-7xl mx-auto px-4 mt-6 no-print">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-emerald-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold">إجمالي المبيعات المحصلة</p>
+                        <h3 id="stat-sales" class="text-2xl font-extrabold text-gray-800 mt-1">0.00 شيكل</h3>
+                    </div>
+                    <i class="fa-solid fa-sack-dollar text-3xl text-emerald-100 bg-emerald-600 p-3 rounded-lg"></i>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-blue-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold">صافي الأرباح الحقيقية</p>
+                        <h3 id="stat-profit" class="text-2xl font-extrabold text-blue-600 mt-1">0.00 شيكل</h3>
+                    </div>
+                    <i class="fa-solid fa-chart-line text-3xl text-blue-100 bg-blue-600 p-3 rounded-lg"></i>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-red-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold">إجمالي الديون على العملاء</p>
+                        <h3 id="stat-debts" class="text-2xl font-extrabold text-red-600 mt-1">0.00 شيكل</h3>
+                    </div>
+                    <i class="fa-solid fa-hand-holding-dollar text-3xl text-red-100 bg-red-600 p-3 rounded-lg"></i>
+                </div>
+                <div class="bg-white p-5 rounded-xl shadow-sm border-r-4 border-amber-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-gray-500 font-bold">عدد الأصناف بالمخزون</p>
+                        <h3 id="stat-items" class="text-2xl font-extrabold text-gray-800 mt-1">4</h3>
+                    </div>
+                    <i class="fa-solid fa-box-open text-3xl text-amber-100 bg-amber-500 p-3 rounded-lg"></i>
+                </div>
+            </div>
+        </section>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="max-w-7xl mx-auto px-4 py-6 no-print">
+
+            <!-- 1. قسم نقطة البيع (POS) -->
+            <div id="tab-pos" class="tab-content grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 bg-white p-5 rounded-xl shadow-sm">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-grid-2 text-emerald-600 ml-2"></i>اختر الأصناف لإضافتها للفاتورة</h2>
+                        <input type="text" id="pos-search" oninput="renderPosProducts()" placeholder="ابحث عن صنف..." class="border rounded-lg px-3 py-1.5 text-sm w-48 focus:outline-emerald-500">
+                    </div>
+                    <div id="pos-products-grid" class="grid grid-cols-2 sm:grid-cols-3 gap-3 max-h-[480px] overflow-y-auto p-1">
+                    <div onclick="addToCart(1)" class="cursor-pointer border border-gray-200 bg-gray-50 hover:border-emerald-500 p-3 rounded-xl transition flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">سماعة بلوتوث لاسلكية Pro</h4>
+                            <span class="text-xs text-gray-500">المتوفر: 15</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="font-extrabold text-emerald-700">85 شيكل</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-lg font-bold">+ إضافة</span>
+                        </div>
+                    </div>
+                    <div onclick="addToCart(2)" class="cursor-pointer border border-gray-200 bg-gray-50 hover:border-emerald-500 p-3 rounded-xl transition flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">شاحن سريع أصلي 25W</h4>
+                            <span class="text-xs text-gray-500">المتوفر: 30</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="font-extrabold text-emerald-700">50 شيكل</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-lg font-bold">+ إضافة</span>
+                        </div>
+                    </div>
+                    <div onclick="addToCart(3)" class="cursor-pointer border border-red-300 bg-red-50 hover:border-emerald-500 p-3 rounded-xl transition flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">حافظة حماية ضد الصدمات</h4>
+                            <span class="text-xs text-gray-500">المتوفر: 4</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="font-extrabold text-emerald-700">25 شيكل</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-lg font-bold">+ إضافة</span>
+                        </div>
+                    </div>
+                    <div onclick="addToCart(4)" class="cursor-pointer border border-gray-200 bg-gray-50 hover:border-emerald-500 p-3 rounded-xl transition flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">خدمة صيانة وفحص برمجي</h4>
+                            <span class="text-xs text-gray-500">المتوفر: 999</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="font-extrabold text-emerald-700">40 شيكل</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-lg font-bold">+ إضافة</span>
+                        </div>
+                    </div></div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-bold text-gray-800 border-b pb-3 mb-4"><i class="fa-solid fa-receipt text-emerald-600 ml-2"></i>الفاتورة الحالية</h2>
+                        <div class="space-y-3 mb-4">
+                            <input type="text" id="cust-name" placeholder="اسم العميل (اختياري للنقدي / إلزامي للدين)" class="w-full border rounded-lg px-3 py-2 text-sm">
+                            <input type="text" id="cust-phone" placeholder="رقم واتساب العميل مع رمز الدولة (مثال: 97059...)" class="w-full border rounded-lg px-3 py-2 text-sm">
+                        </div>
+                        <div id="cart-items" class="space-y-2 max-h-52 overflow-y-auto mb-4 border-b pb-3"><p class="text-center text-gray-400 text-xs py-6">السلة فارغة، اضغط على الأصناف لإضافتها</p></div>
+                    </div>
+
+                    <div>
+                        <div class="space-y-2 text-sm bg-gray-50 p-3 rounded-lg mb-4">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">الخصم:</span>
+                                <input type="number" id="cart-discount" value="0" min="0" oninput="updateCartUI()" class="w-24 border rounded px-2 py-1 text-left font-bold">
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-600">طريقة الدفع:</span>
+                                <select id="payment-status" class="border rounded px-2 py-1 font-bold text-sm">
+                                    <option value="paid">نقدي / مدفوع بالكامل ✅</option>
+                                    <option value="debt">آجل / تسجيل في دفتر الديون ⚠️</option>
+                                </select>
+                            </div>
+                            <div class="flex justify-between items-center text-lg font-extrabold text-emerald-700 pt-2 border-t">
+                                <span>الإجمالي النهائي:</span>
+                                <span id="cart-total">0.00 شيكل</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="checkout(false)" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-print"></i> حفظ وطباعة
+                            </button>
+                            <button onclick="checkout(true)" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2.5 px-4 rounded-lg text-sm transition flex items-center justify-center gap-2">
+                                <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال واتساب
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. قسم المخزون والمنتجات -->
+            <div id="tab-inventory" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm">
+                    <h2 class="text-lg font-bold mb-4 text-gray-800"><i class="fa-solid fa-plus-circle text-emerald-600 ml-2"></i>إضافة منتج أو خدمة جديدة للمخزون</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                        <input type="text" id="prod-name" placeholder="اسم المنتج أو الخدمة" class="border rounded-lg px-3 py-2 text-sm">
+                        <input type="number" id="prod-cost" placeholder="سعر التكلفة (الشراء)" class="border rounded-lg px-3 py-2 text-sm">
+                        <input type="number" id="prod-price" placeholder="سعر البيع للزبون" class="border rounded-lg px-3 py-2 text-sm">
+                        <input type="number" id="prod-stock" placeholder="الكمية المتوفرة" class="border rounded-lg px-3 py-2 text-sm">
+                        <button onclick="addProduct()" class="bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-lg px-4 py-2 text-sm transition">
+                            <i class="fa-solid fa-plus ml-1"></i> حفظ بالمخزون
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-xl shadow-sm overflow-x-auto">
+                    <h2 class="text-lg font-bold mb-4 text-gray-800">قائمة الأصناف الحالية</h2>
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th class="p-3 rounded-r-lg">اسم الصنف</th>
+                                <th class="p-3">سعر التكلفة</th>
+                                <th class="p-3">سعر البيع</th>
+                                <th class="p-3">صافي ربح القطعة</th>
+                                <th class="p-3">الكمية المتبقية</th>
+                                <th class="p-3 rounded-l-lg">إجراءات</th>
+                            </tr>
+                        </thead>
+                        <tbody id="inventory-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. قسم الفواتير ودفتر الديون -->
+            <div id="tab-debts" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-xl shadow-sm overflow-x-auto">
+                    <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
+                        <h2 class="text-lg font-bold text-gray-800"><i class="fa-solid fa-book-open text-emerald-600 ml-2"></i>سجل الفواتير ودفتر الديون</h2>
+                        <div class="flex gap-2">
+                            <button onclick="renderInvoices('all')" class="bg-gray-200 hover:bg-gray-300 text-gray-800 px-3 py-1.5 rounded-lg text-xs font-bold">كل الفواتير</button>
+                            <button onclick="renderInvoices('debt')" class="bg-red-100 hover:bg-red-200 text-red-700 px-3 py-1.5 rounded-lg text-xs font-bold">الديون غير المدفوعة فقط ⚠️</button>
+                        </div>
+                    </div>
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-gray-100 text-gray-700">
+                            <tr>
+                                <th class="p-3 rounded-r-lg">رقم الفاتورة</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">العميل</th>
+                                <th class="p-3">المبلغ الإجمالي</th>
+                                <th class="p-3">الحالة</th>
+                                <th class="p-3 rounded-l-lg">إجراءات التحصيل والطباعة</th>
+                            </tr>
+                        </thead>
+                        <tbody id="invoices-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. قسم الترخيص والنسخ الاحتياطي (ما يراه العميل فقط) -->
+            <div id="tab-settings" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- بطاقة الترخيص المحمية -->
+                <div class="bg-white p-5 rounded-xl shadow-sm space-y-4 border-t-4 border-emerald-500">
+                    <h2 class="text-lg font-bold text-gray-800 border-b pb-2"><i class="fa-solid fa-certificate text-emerald-600 ml-2"></i>بيانات الترخيص الرسمي للمتجر</h2>
+                    <div class="bg-emerald-50 border border-emerald-200 rounded-lg p-4 space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">النسخة مرخصة لصالح:</span>
+                            <span id="lic-store-name" class="font-extrabold text-emerald-800">متجر النخبة التجاري (نسخة العرض)</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">بيانات التواصل بالفاتورة:</span>
+                            <span id="lic-store-phone" class="font-bold text-gray-800">للتواصل والاستفسار: 0590000000</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">العملة المعتمدة بالنظام:</span>
+                            <span id="lic-currency" class="font-bold text-gray-800">شيكل</span>
+                        </div>
+                        <div class="flex justify-between pt-2 border-t border-emerald-200">
+                            <span class="text-gray-600">حالة الترخيص:</span>
+                            <span class="text-emerald-700 font-bold"><i class="fa-solid fa-circle-check"></i> مفعل مدى الحياة</span>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400">هذه النسخة مسجلة ومرتبطة باسم المتجر الموضح أعلاه لحماية حقوق الملكية.</p>
+                </div>
+
+                <!-- النسخ الاحتياطي -->
+                <div class="bg-white p-5 rounded-xl shadow-sm space-y-4 border-t-4 border-blue-500">
+                    <h2 class="text-lg font-bold text-gray-800 border-b pb-2"><i class="fa-solid fa-database text-blue-600 ml-2"></i>النسخ الاحتياطي وحماية البيانات</h2>
+                    <p class="text-xs text-gray-600 leading-relaxed">يتم حفظ جميع الفواتير والمخزون تلقائياً على جهازك. يمكنك تنزيل نسخة احتياطية للاحتفاظ بها بأمان أو نقلها لجهاز آخر في أي وقت.</p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="exportDatabase()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-lg text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> تحميل نسخة احتياطية (Backup)
+                        </button>
+                        <label class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-lg text-sm flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-upload"></i> استعادة نسخة محفوظة
+                            <input type="file" accept=".json" onchange="importDatabase(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- الفوتر مع زر المطور السري (يختفي تلقائياً في نسخ العملاء) -->
+    <footer class="bg-white border-t py-3 px-4 text-center text-xs text-gray-500 no-print mt-8">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span>نظام تاجر برو الذكي لإدارة المبيعات والديون — جميع الحقوق محفوظة</span>
+            <button id="dev-panel-btn" onclick="openDevModal()" class="text-gray-400 hover:text-slate-800 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-lock"></i> لوحة المطور (توليد نسخ العملاء)
+            </button>
+        </div>
+    </footer>
+
+    <!-- نافذة المطور السرية لتوليد نسخ للعملاء بضغطة زر -->
+    <div id="dev-modal" class="fixed inset-0 bg-black/60 items-center justify-center z-50 p-4 no-print hidden">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-extrabold text-slate-900"><i class="fa-solid fa-wand-magic-sparkles text-emerald-600 ml-2"></i>مولّد نُسخ العملاء التجاري (النسخة الأم)</h3>
+                <button onclick="closeDevModal()" class="text-gray-400 hover:text-red-500 text-xl font-bold">×</button>
+            </div>
+            <p class="text-xs text-gray-600 bg-amber-50 border border-amber-200 p-3 rounded-lg">
+                أدخل بيانات المحل الذي اشترى منك النظام، واضغط على <strong>"توليد وتحميل نسخة العميل"</strong>. سيقوم النظام بتنزيل ملف برنامج جاهز ومختوم باسم محل العميل، وستختفي منه هذه اللوحة تماماً!
+            </p>
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">اسم متجر أو شركة العميل:</label>
+                    <input type="text" id="gen-store-name" placeholder="مثال: معرض الأمل للهواتف والاتصالات" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">رقم هاتف وعنوان العميل (يظهر في أسفل فواتيره):</label>
+                    <input type="text" id="gen-store-phone" placeholder="مثال: نابلس - شارع فيصل | جوال: 0590000000" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-700 mb-1">عملة العميل (مثال: شيكل، د.أ، ر.س، ج.م، $):</label>
+                    <input type="text" id="gen-currency" value="شيكل" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="gen-empty-stock" class="w-4 h-4">
+                    <label for="gen-empty-stock" class="text-xs font-bold text-gray-700">تسليم النسخة بمخزون فارغ تماماً (بدون المنتجات التجريبية)</label>
+                </div>
+            </div>
+            <div class="pt-3 border-t flex gap-2">
+                <button onclick="generateClientFile()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-2.5 rounded-xl text-sm transition flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-file-code"></i> توليد وتحميل نسخة العميل الجاهزة للإرسال
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قالب الفاتورة للطباعة الحرارية / PDF -->
+    <div id="printable-invoice" class="hidden max-w-md mx-auto bg-white p-6 border text-sm">
+        <div class="text-center border-b pb-4 mb-4">
+            <h2 id="print-store-name" class="text-xl font-extrabold"></h2>
+            <p id="print-store-phone" class="text-xs text-gray-600 mt-1"></p>
+            <p id="print-inv-meta" class="text-xs text-gray-500 mt-2"></p>
+        </div>
+        <div class="mb-3 text-xs">
+            <strong>العميل: </strong> <span id="print-cust-name"></span> | <strong>الحالة: </strong> <span id="print-status"></span>
+        </div>
+        <table class="w-full text-right text-xs border-b pb-3 mb-3">
+            <thead>
+                <tr class="border-b bg-gray-50">
+                    <th class="py-1">الصنف</th>
+                    <th class="py-1">الكمية</th>
+                    <th class="py-1">السعر</th>
+                    <th class="py-1">المجموع</th>
+                </tr>
+            </thead>
+            <tbody id="print-items"></tbody>
+        </table>
+        <div class="space-y-1 text-sm font-bold">
+            <div class="flex justify-between text-xs text-gray-600"><span>الخصم:</span><span id="print-discount"></span></div>
+            <div class="flex justify-between text-base border-t pt-2"><span>الإجمالي المطلوب:</span><span id="print-total"></span></div>
+        </div>
+        <p class="text-center text-xs text-gray-500 mt-6 border-t pt-3">شكراً لتعاملكم معنا!</p>
+    </div>
+
+    <script>
+        /*__CONFIG_START__*/
+        const appConfig = {
+            storeName: "نسخة العرض التجريبية - تاجر",
+            phone: "970597510649",
+            currency: "دولار",
+            isClientCopy: true,
+            emptyStart: false,
+            storageKey: "tajer_client_" + 1792079069664
+        };
+        /*__CONFIG_END__*/
+
+        const sampleProducts = [
+            { id: 1, name: "سماعة بلوتوث لاسلكية Pro", cost: 45, price: 85, stock: 15 },
+            { id: 2, name: "شاحن سريع أصلي 25W", cost: 25, price: 50, stock: 30 },
+            { id: 3, name: "حافظة حماية ضد الصدمات", cost: 8, price: 25, stock: 4 },
+            { id: 4, name: "خدمة صيانة وفحص برمجي", cost: 0, price: 40, stock: 999 }
+        ];
+
+        const defaultDB = {
+            settings: {
+                storeName: appConfig.storeName,
+                phone: appConfig.phone,
+                currency: appConfig.currency
+            },
+            products: appConfig.emptyStart ? [] : sampleProducts,
+            invoices: []
+        };
+
+        let db = JSON.parse(localStorage.getItem(appConfig.storageKey)) || defaultDB;
+        // ضمان تطابق اسم المتجر مع الترخيص في نسخ العملاء
+        db.settings.storeName = appConfig.storeName;
+        db.settings.phone = appConfig.phone;
+        db.settings.currency = appConfig.currency;
+
+        let cart = [];
+
+        // إخفاء زر المطور نهائياً إذا كانت هذه نسخة عميل
+        if (appConfig.isClientCopy) {
+            const devBtn = document.getElementById('dev-panel-btn');
+            if (devBtn) devBtn.remove();
+            const devModal = document.getElementById('dev-modal');
+            if (devModal) devModal.remove();
+        }
+
+        function saveDB() {
+            localStorage.setItem(appConfig.storageKey, JSON.stringify(db));
+            updateDashboard();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-emerald-600', 'text-white');
+                btn.classList.add('bg-slate-800', 'text-slate-200');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            activeBtn.classList.remove('bg-slate-800', 'text-slate-200');
+            activeBtn.classList.add('bg-emerald-600', 'text-white');
+            
+            if (tabId === 'pos') renderPosProducts();
+            if (tabId === 'inventory') renderInventory();
+            if (tabId === 'debts') renderInvoices('all');
+        }
+
+        function updateDashboard() {
+            const c = db.settings.currency;
+            document.getElementById('header-store-name').innerText = db.settings.storeName;
+            document.getElementById('lic-store-name').innerText = db.settings.storeName;
+            document.getElementById('lic-store-phone').innerText = db.settings.phone;
+            document.getElementById('lic-currency').innerText = db.settings.currency;
+
+            let totalSales = 0, totalProfit = 0, totalDebts = 0, debtCount = 0;
+            db.invoices.forEach(inv => {
+                if (inv.status === 'paid') {
+                    totalSales += inv.total;
+                    totalProfit += inv.profit;
+                } else {
+                    totalDebts += inv.total;
+                    debtCount++;
+                }
+            });
+
+            document.getElementById('stat-sales').innerText = `${totalSales.toFixed(2)} ${c}`;
+            document.getElementById('stat-profit').innerText = `${totalProfit.toFixed(2)} ${c}`;
+            document.getElementById('stat-debts').innerText = `${totalDebts.toFixed(2)} ${c}`;
+            document.getElementById('stat-items').innerText = db.products.length;
+
+            const badge = document.getElementById('debt-badge');
+            if (debtCount > 0) {
+                badge.innerText = debtCount;
+                badge.classList.remove('hidden');
+            } else {
+                badge.classList.add('hidden');
+            }
+        }
+
+        function renderPosProducts() {
+            const query = document.getElementById('pos-search').value.toLowerCase();
+            const grid = document.getElementById('pos-products-grid');
+            grid.innerHTML = '';
+            const filtered = db.products.filter(p => p.name.toLowerCase().includes(query));
+            if (filtered.length === 0) {
+                grid.innerHTML = '<p class="col-span-3 text-center text-gray-400 py-8 text-sm">لا توجد أصناف، أضف منتجاتك من قسم المخزون</p>';
+                return;
+            }
+            filtered.forEach(p => {
+                const lowStock = p.stock <= 5 ? 'border-red-300 bg-red-50' : 'border-gray-200 bg-gray-50';
+                grid.innerHTML += `
+                    <div onclick="addToCart(${p.id})" class="cursor-pointer border ${lowStock} hover:border-emerald-500 p-3 rounded-xl transition flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-bold text-gray-800 text-sm">${p.name}</h4>
+                            <span class="text-xs text-gray-500">المتوفر: ${p.stock}</span>
+                        </div>
+                        <div class="mt-3 flex justify-between items-center">
+                            <span class="font-extrabold text-emerald-700">${p.price} ${db.settings.currency}</span>
+                            <span class="bg-emerald-100 text-emerald-700 text-xs px-2 py-1 rounded-lg font-bold">+ إضافة</span>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        function addToCart(prodId) {
+            const product = db.products.find(p => p.id === prodId);
+            if (!product || product.stock <= 0) return alert('المنتج غير متوفر في المخزون!');
+            const existing = cart.find(item => item.id === prodId);
+            if (existing) {
+                if (existing.qty >= product.stock) return alert('الكمية المطلوبة تتجاوز المخزون المتاح!');
+                existing.qty++;
+            } else {
+                cart.push({ id: product.id, name: product.name, price: product.price, cost: product.cost, qty: 1 });
+            }
+            updateCartUI();
+        }
+
+        function changeCartQty(id, delta) {
+            const item = cart.find(i => i.id === id);
+            if (!item) return;
+            item.qty += delta;
+            if (item.qty <= 0) cart = cart.filter(i => i.id !== id);
+            updateCartUI();
+        }
+
+        function updateCartUI() {
+            const container = document.getElementById('cart-items');
+            container.innerHTML = '';
+            let subtotal = 0;
+
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-gray-50 p-2 rounded-lg text-xs">
+                        <div class="font-bold w-1/2 truncate">${item.name}</div>
+                        <div class="flex items-center gap-1.5">
+                            <button onclick="changeCartQty(${item.id}, -1)" class="bg-gray-200 px-2 py-0.5 rounded font-bold">-</button>
+                            <span class="font-bold">${item.qty}</span>
+                            <button onclick="changeCartQty(${item.id}, 1)" class="bg-gray-200 px-2 py-0.5 rounded font-bold">+</button>
+                        </div>
+                        <div class="font-extrabold text-emerald-700">${(item.price * item.qty).toFixed(2)}</div>
+                    </div>`;
+            });
+
+            if (cart.length === 0) container.innerHTML = '<p class="text-center text-gray-400 text-xs py-6">السلة فارغة، اضغط على الأصناف لإضافتها</p>';
+
+            const discount = parseFloat(document.getElementById('cart-discount').value) || 0;
+            const total = Math.max(0, subtotal - discount);
+            document.getElementById('cart-total').innerText = `${total.toFixed(2)} ${db.settings.currency}`;
+        }
+
+        function checkout(sendWhatsApp) {
+            if (cart.length === 0) return alert('أضف منتجات إلى الفاتورة أولاً!');
+            const custName = document.getElementById('cust-name').value.trim() || 'عميل نقدي';
+            const custPhone = document.getElementById('cust-phone').value.trim();
+            const status = document.getElementById('payment-status').value;
+            const discount = parseFloat(document.getElementById('cart-discount').value) || 0;
+
+            if (status === 'debt' && custName === 'عميل نقدي') {
+                return alert('يرجى كتابة اسم العميل لحفظ الفاتورة في دفتر الديون!');
+            }
+
+            let subtotal = 0, totalCost = 0;
+            cart.forEach(item => {
+                subtotal += item.price * item.qty;
+                totalCost += item.cost * item.qty;
+                const prod = db.products.find(p => p.id === item.id);
+                if (prod) prod.stock -= item.qty;
+            });
+
+            const total = Math.max(0, subtotal - discount);
+            const profit = total - totalCost;
+
+            const newInvoice = {
+                id: Date.now().toString().slice(-6),
+                date: new Date().toLocaleString('ar-EG'),
+                customer: custName,
+                phone: custPhone,
+                items: [...cart],
+                discount,
+                total,
+                profit,
+                status
+            };
+
+            db.invoices.unshift(newInvoice);
+            saveDB();
+            renderPosProducts();
+
+            if (sendWhatsApp) {
+                sendInvoiceViaWhatsApp(newInvoice);
+            } else {
+                printInvoice(newInvoice.id);
+            }
+
+            cart = [];
+            document.getElementById('cust-name').value = '';
+            document.getElementById('cust-phone').value = '';
+            document.getElementById('cart-discount').value = '0';
+            document.getElementById('payment-status').value = 'paid';
+            updateCartUI();
+        }
+
+        function printInvoice(invId) {
+            const inv = db.invoices.find(i => i.id === invId);
+            if (!inv) return;
+            const c = db.settings.currency;
+
+            document.getElementById('print-store-name').innerText = db.settings.storeName;
+            document.getElementById('print-store-phone').innerText = db.settings.phone;
+            document.getElementById('print-inv-meta').innerText = `فاتورة رقم: #${inv.id} | التاريخ: ${inv.date}`;
+            document.getElementById('print-cust-name').innerText = inv.customer;
+            document.getElementById('print-status').innerText = inv.status === 'paid' ? 'مدفوعة نقداً' : 'آجل (ذمم / دين)';
+            document.getElementById('print-discount').innerText = `${inv.discount} ${c}`;
+            document.getElementById('print-total').innerText = `${inv.total.toFixed(2)} ${c}`;
+
+            const tbody = document.getElementById('print-items');
+            tbody.innerHTML = '';
+            inv.items.forEach(item => {
+                tbody.innerHTML += `
+                    <tr class="border-b">
+                        <td class="py-1">${item.name}</td>
+                        <td class="py-1">${item.qty}</td>
+                        <td class="py-1">${item.price}</td>
+                        <td class="py-1 font-bold">${(item.price * item.qty).toFixed(2)}</td>
+                    </tr>`;
+            });
+
+            const printArea = document.getElementById('printable-invoice');
+            printArea.classList.remove('hidden');
+            window.print();
+            printArea.classList.add('hidden');
+        }
+
+        function sendInvoiceViaWhatsApp(inv) {
+            const c = db.settings.currency;
+            let text = `*${db.settings.storeName}*\n`;
+            text += `فاتورة رقم: #${inv.id}\nالتاريخ: ${inv.date}\nالعميل: ${inv.customer}\n------------------\n`;
+            inv.items.forEach(i => {
+                text += `▪ ${i.name} (${i.qty} × ${i.price}) = ${(i.qty * i.price).toFixed(2)} ${c}\n`;
+            });
+            text += `------------------\n`;
+            if (inv.discount > 0) text += `الخصم: ${inv.discount} ${c}\n`;
+            text += `*الإجمالي المطلوب: ${inv.total.toFixed(2)} ${c}*\n`;
+            text += `حالة الفاتورة: ${inv.status === 'paid' ? 'مدفوعة ✅' : 'مسجلة كرصيد آجل (دين) ⚠️'}\n\nشكراً لتعاملكم معنا!`;
+
+            const phoneParam = inv.phone ? inv.phone.replace(/[^0-9]/g, '') : '';
+            window.open(`https://wa.me/${phoneParam}?text=${encodeURIComponent(text)}`, '_blank');
+        }
+
+        function renderInventory() {
+            const tbody = document.getElementById('inventory-table');
+            tbody.innerHTML = '';
+            const c = db.settings.currency;
+            db.products.forEach(p => {
+                const stockBadge = p.stock <= 5 
+                    ? `<span class="bg-red-100 text-red-700 px-2 py-0.5 rounded font-bold">${p.stock} (وشيك النفاد)</span>` 
+                    : `<span class="font-bold">${p.stock}</span>`;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 font-bold">${p.name}</td>
+                        <td class="p-3">${p.cost} ${c}</td>
+                        <td class="p-3 font-bold text-emerald-700">${p.price} ${c}</td>
+                        <td class="p-3 text-blue-600 font-bold">+${(p.price - p.cost).toFixed(2)} ${c}</td>
+                        <td class="p-3">${stockBadge}</td>
+                        <td class="p-3">
+                            <button onclick="deleteProduct(${p.id})" class="text-red-500 hover:text-red-700 text-xs font-bold"><i class="fa-solid fa-trash"></i> حذف</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function addProduct() {
+            const name = document.getElementById('prod-name').value.trim();
+            const cost = parseFloat(document.getElementById('prod-cost').value) || 0;
+            const price = parseFloat(document.getElementById('prod-price').value) || 0;
+            const stock = parseInt(document.getElementById('prod-stock').value) || 0;
+
+            if (!name || price <= 0) return alert('يرجى إدخال اسم الصنف وسعر البيع بشكل صحيح!');
+            db.products.push({ id: Date.now(), name, cost, price, stock });
+            saveDB();
+            renderInventory();
+
+            document.getElementById('prod-name').value = '';
+            document.getElementById('prod-cost').value = '';
+            document.getElementById('prod-price').value = '';
+            document.getElementById('prod-stock').value = '';
+        }
+
+        function deleteProduct(id) {
+            if (!confirm('هل أنت متأكد من حذف هذا الصنف؟')) return;
+            db.products = db.products.filter(p => p.id !== id);
+            saveDB();
+            renderInventory();
+        }
+
+        function renderInvoices(filter) {
+            const tbody = document.getElementById('invoices-table');
+            tbody.innerHTML = '';
+            const c = db.settings.currency;
+            const list = filter === 'debt' ? db.invoices.filter(i => i.status === 'debt') : db.invoices;
+
+            list.forEach(inv => {
+                const statusBadge = inv.status === 'paid'
+                    ? `<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold">مدفوعة ✅</span>`
+                    : `<span class="bg-red-100 text-red-700 px-2.5 py-1 rounded-full text-xs font-bold">دين مستحق ⚠️</span>`;
+
+                const debtActions = inv.status === 'debt' ? `
+                    <button onclick="markAsPaid('${inv.id}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded text-xs font-bold hover:bg-emerald-700 ml-1">تسديد الدين</button>
+                    <button onclick="remindDebtWhatsApp('${inv.id}')" class="bg-green-500 text-white px-2.5 py-1 rounded text-xs font-bold hover:bg-green-600 ml-1"><i class="fa-brands fa-whatsapp"></i> تذكير</button>
+                ` : '';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 font-bold">#${inv.id}</td>
+                        <td class="p-3 text-xs text-gray-500">${inv.date}</td>
+                        <td class="p-3 font-bold">${inv.customer}</td>
+                        <td class="p-3 font-extrabold">${inv.total.toFixed(2)} ${c}</td>
+                        <td class="p-3">${statusBadge}</td>
+                        <td class="p-3 flex flex-wrap gap-1">
+                            ${debtActions}
+                            <button onclick="printInvoice('${inv.id}')" class="bg-gray-200 text-gray-700 px-2.5 py-1 rounded text-xs font-bold hover:bg-gray-300"><i class="fa-solid fa-print"></i> طباعة</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function markAsPaid(invId) {
+            const inv = db.invoices.find(i => i.id === invId);
+            if (inv && confirm(`هل تم استلام مبلغ ${inv.total} ${db.settings.currency} من العميل "${inv.customer}"؟`)) {
+                inv.status = 'paid';
+                saveDB();
+                renderInvoices('all');
+            }
+        }
+
+        function remindDebtWhatsApp(invId) {
+            const inv = db.invoices.find(i => i.id === invId);
+            if (!inv) return;
+            const msg = `مرحباً بك أستاذ *${inv.customer}*،\nتحية طيبة من *${db.settings.storeName}*.\nنود تذكيركم بلطف بوجود فاتورة آجلة رقم (#${inv.id}) بتاريخ ${inv.date} بمبلغ إجمالي قدره *${inv.total.toFixed(2)} ${db.settings.currency}*.\nشاكرين لكم حسن تعاونكم معنا!`;
+            const phoneParam = inv.phone ? inv.phone.replace(/[^0-9]/g, '') : '';
+            window.open(`https://wa.me/${phoneParam}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function exportDatabase() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const dlAnchor = document.createElement('a');
+            dlAnchor.setAttribute("href", dataStr);
+            dlAnchor.setAttribute("download", `نسخة_احتياطية_${db.settings.storeName}.json`);
+            document.body.appendChild(dlAnchor);
+            dlAnchor.click();
+            dlAnchor.remove();
+        }
+
+        function importDatabase(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const imported = JSON.parse(e.target.result);
+                    db.products = imported.products || [];
+                    db.invoices = imported.invoices || [];
+                    saveDB();
+                    alert('تم استعادة قاعدة البيانات بنجاح!');
+                    location.reload();
+                } catch (err) {
+                    alert('ملف غير صالح!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // وظائف لوحة المطور السرية لتوليد نسخ العملاء
+        function openDevModal() {
+            const pin = prompt("أدخل الرمز السري للمطور لفتح مولّد التراخيص:");
+            if (pin !== "2026") return alert("رمز خاطئ!");
+            document.getElementById('dev-modal').classList.remove('hidden');
+            document.getElementById('dev-modal').classList.add('flex');
+        }
+
+        function closeDevModal() {
+            document.getElementById('dev-modal').classList.add('hidden');
+            document.getElementById('dev-modal').classList.remove('flex');
+        }
+
+        function generateClientFile() {
+            const cName = document.getElementById('gen-store-name').value.trim();
+            const cPhone = document.getElementById('gen-store-phone').value.trim() || "شكراً لتسوقكم معنا";
+            const cCurr = document.getElementById('gen-currency').value.trim() || "شيكل";
+            const isEmpty = document.getElementById('gen-empty-stock').checked;
+
+            if (!cName) return alert("يرجى كتابة اسم متجر العميل أولاً!");
+
+            closeDevModal();
+            switchTab('pos');
+
+            let fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const startTag = "/*" + "__CONFIG_START__" + "*/";
+            const endTag = "/*" + "__CONFIG_END__" + "*/";
+
+            const newConfigBlock = `${startTag}
+        const appConfig = {
+            storeName: ${JSON.stringify(cName)},
+            phone: ${JSON.stringify(cPhone)},
+            currency: ${JSON.stringify(cCurr)},
+            isClientCopy: true,
+            emptyStart: ${isEmpty},
+            storageKey: "tajer_client_" + ${Date.now()}
+        };
+        ${endTag}`;
+
+            const sIdx = fullHtml.indexOf(startTag);
+            const eIdx = fullHtml.indexOf(endTag) + endTag.length;
+            fullHtml = fullHtml.substring(0, sIdx) + newConfigBlock + fullHtml.substring(eIdx);
+
+            const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `نظام_كاشير_${cName.replace(/\s+/g, '_')}.html`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            alert(`تم توليد وتحميل نسخة العميل "${cName}" بنجاح! أرسل هذا الملف للعميل عبر واتساب أو الإيميل.`);
+        }
+
+        updateDashboard();
+        renderPosProducts();
+        updateCartUI();
+    </script>
+
+</body></html>
