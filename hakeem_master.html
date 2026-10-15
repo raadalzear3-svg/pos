@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>حكيم برو | نظام إدارة العيادات الطبية والروشتة الإلكترونية</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body { font-family: 'Cairo', sans-serif; background-color: #f0fdfa; }
+        @media print {
+            body * { visibility: hidden; }
+            #printable-rx, #printable-rx * { visibility: visible; }
+            #printable-rx { position: absolute; left: 0; top: 0; width: 100%; background: white; padding: 25px; box-shadow: none; border: none; }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="text-slate-800 flex flex-col min-h-screen justify-between">
+
+    <div>
+        <!-- الهيدر الطبي -->
+        <header class="bg-gradient-to-l from-teal-900 via-teal-800 to-cyan-900 text-white shadow-xl no-print">
+            <div class="max-w-7xl mx-auto px-4 py-4 flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <div class="bg-teal-400/20 border border-teal-300/30 p-3 rounded-xl text-teal-200">
+                        <i class="fa-solid fa-user-doctor text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 id="header-clinic-name" class="text-xl font-extrabold tracking-wide">عيادة النخبة التخصصية</h1>
+                        <p id="header-doctor-spec" class="text-xs text-teal-200 font-semibold">طب وجراحة الفم والأسنان — نظام الإدارة الطبية المتكامل</p>
+                    </div>
+                </div>
+                <nav class="flex flex-wrap gap-2">
+                    <button onclick="switchTab('rx')" id="tab-btn-rx" class="tab-btn bg-teal-500 text-white px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2 shadow">
+                        <i class="fa-solid fa-stethoscope"></i> الكشفية والروشتة الطبية
+                    </button>
+                    <button onclick="switchTab('appointments')" id="tab-btn-appointments" class="tab-btn bg-teal-950/60 hover:bg-teal-700 text-teal-100 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-calendar-check"></i> المواعيد وطابور الانتظار
+                        <span id="waiting-badge" class="bg-amber-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                    </button>
+                    <button onclick="switchTab('patients')" id="tab-btn-patients" class="tab-btn bg-teal-950/60 hover:bg-teal-700 text-teal-100 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-hospital-user"></i> سجل المرضى (EMR)
+                    </button>
+                    <button onclick="switchTab('finance')" id="tab-btn-finance" class="tab-btn bg-teal-950/60 hover:bg-teal-700 text-teal-100 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-file-invoice-dollar"></i> الحسابات وأقساط المرضى
+                        <span id="debt-badge" class="bg-rose-500 text-white text-xs px-2 py-0.5 rounded-full hidden">0</span>
+                    </button>
+                    <button onclick="switchTab('settings')" id="tab-btn-settings" class="tab-btn bg-teal-950/60 hover:bg-teal-700 text-teal-100 px-4 py-2 rounded-xl text-sm font-bold transition flex items-center gap-2">
+                        <i class="fa-solid fa-shield-heart"></i> الترخيص والنسخ الاحتياطي
+                    </button>
+                </nav>
+            </div>
+        </header>
+
+        <!-- المؤشرات والإحصائيات -->
+        <section class="max-w-7xl mx-auto px-4 mt-6 no-print">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-teal-600 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold">إجمالي المرضى المسجلين</p>
+                        <h3 id="stat-patients" class="text-2xl font-black text-slate-800 mt-1">0</h3>
+                    </div>
+                    <div class="bg-teal-50 text-teal-600 p-3.5 rounded-xl"><i class="fa-solid fa-users text-2xl"></i></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-amber-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold">مواعيد قيد الانتظار</p>
+                        <h3 id="stat-waiting" class="text-2xl font-black text-amber-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-amber-50 text-amber-600 p-3.5 rounded-xl"><i class="fa-solid fa-clock-rotate-left text-2xl"></i></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-emerald-600 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold">إيرادات العيادة المحصلة</p>
+                        <h3 id="stat-revenue" class="text-2xl font-black text-emerald-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-emerald-50 text-emerald-600 p-3.5 rounded-xl"><i class="fa-solid fa-Vault text-2xl fa-sack-dollar"></i></div>
+                </div>
+                <div class="bg-white p-5 rounded-2xl shadow-sm border-r-4 border-rose-500 flex justify-between items-center">
+                    <div>
+                        <p class="text-xs text-slate-500 font-bold">أقساط وذمم متبقية على المرضى</p>
+                        <h3 id="stat-unpaid" class="text-2xl font-black text-rose-600 mt-1">0</h3>
+                    </div>
+                    <div class="bg-rose-50 text-rose-600 p-3.5 rounded-xl"><i class="fa-solid fa-hand-holding-medical text-2xl"></i></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- المحتوى الرئيسي -->
+        <main class="max-w-7xl mx-auto px-4 py-6 no-print">
+
+            <!-- 1. قسم الكشفية والروشتة الطبية الإلكترونية -->
+            <div id="tab-rx" class="tab-content grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- نموذج الكشف والتشخيص والأدوية -->
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm space-y-5">
+                    <div class="flex justify-between items-center border-b pb-3">
+                        <h2 class="text-lg font-extrabold text-teal-900"><i class="fa-solid fa-file-prescription text-teal-600 ml-2"></i>تسجيل كشفية جديدة وإصدار روشتة (Rx)</h2>
+                        <span class="text-xs bg-teal-50 text-teal-700 px-3 py-1 rounded-full font-bold">تاريخ اليوم: <span id="today-date"></span></span>
+                    </div>
+
+                    <!-- بيانات المريض السريعة -->
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 bg-slate-50 p-4 rounded-xl border border-slate-200">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">اختر مريضاً مسجلاً أو اكتب اسماً جديداً:</label>
+                            <input list="patients-datalist" id="rx-patient-name" oninput="autoFillPatient()" placeholder="اسم المريض الثلاثي..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white focus:outline-teal-600">
+                            <datalist id="patients-datalist"></datalist>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">العمر:</label>
+                            <input type="text" id="rx-patient-age" placeholder="مثال: 28 سنة" class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">رقم واتساب المريض (مع المقدمة):</label>
+                            <input type="text" id="rx-patient-phone" placeholder="مثال: 97059..." class="w-full border rounded-lg px-3 py-2 text-sm bg-white">
+                        </div>
+                        <div class="sm:col-span-3">
+                            <label class="block text-xs font-bold text-rose-600 mb-1"><i class="fa-solid fa-triangle-exclamation ml-1"></i>تنبيهات طبية / حساسية دوائية / أمراض مزمنة:</label>
+                            <input type="text" id="rx-patient-notes" placeholder="مثال: حساسية بنسلين، سكري، ضغط (اختياري)..." class="w-full border border-rose-200 rounded-lg px-3 py-1.5 text-sm bg-white">
+                        </div>
+                    </div>
+
+                    <!-- التشخيص الطبي -->
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">التشخيص الطبي / الإجراء العلاجي (Diagnosis & Procedure):</label>
+                        <input type="text" id="rx-diagnosis" placeholder="مثال: التهاب عصب السن الحاد - جلسة سحب عصب أولى..." class="w-full border rounded-lg px-3 py-2 text-sm focus:outline-teal-600">
+                    </div>
+
+                    <!-- إضافة الأدوية والجرعات -->
+                    <div class="border-t pt-4">
+                        <label class="block text-xs font-bold text-teal-800 mb-2"><i class="fa-solid fa-pills ml-1"></i>إضافة الأدوية والجرعات إلى الروشتة:</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-12 gap-2">
+                            <input type="text" id="med-name" placeholder="اسم الدواء والتركيز (مثال: Augmentin 1g)" class="sm:col-span-5 border rounded-lg px-3 py-2 text-sm">
+                            <input type="text" id="med-dose" placeholder="الجرعة (مثال: حبة كل 12 ساعة بعد الأكل)" class="sm:col-span-5 border rounded-lg px-3 py-2 text-sm">
+                            <button onclick="addMedicineToRx()" class="sm:col-span-2 bg-teal-700 hover:bg-teal-800 text-white font-bold rounded-lg px-3 py-2 text-sm transition">
+                                + إضافة دواء
+                            </button>
+                        </div>
+
+                        <!-- أزرار أدوية سريعة الإضافة -->
+                        <div class="flex flex-wrap gap-1.5 mt-2">
+                            <span class="text-xs text-slate-400 py-1">إضافة سريعة:</span>
+                            <button onclick="quickMed('Paracetamol 500mg', 'حبة عند اللزوم (حتى 3 مرات يومياً)')" class="text-xs bg-slate-100 hover:bg-teal-50 text-slate-700 border px-2.5 py-1 rounded-full">+ مسكن Paracetamol</button>
+                            <button onclick="quickMed('Amoxicillin 500mg', 'كبسولة كل 8 ساعات لمدة 5 أيام')" class="text-xs bg-slate-100 hover:bg-teal-50 text-slate-700 border px-2.5 py-1 rounded-full">+ مضاد Amoxicillin</button>
+                            <button onclick="quickMed('Ibuprofen 400mg', 'حبة بعد الأكل مرتين يومياً')" class="text-xs bg-slate-100 hover:bg-teal-50 text-slate-700 border px-2.5 py-1 rounded-full">+ مضاد التهاب Ibuprofen</button>
+                            <button onclick="quickMed('غسول فم طبي Chlorhexidine', 'مضمضة مرتين يومياً لمدة أسبوع')" class="text-xs bg-slate-100 hover:bg-teal-50 text-slate-700 border px-2.5 py-1 rounded-full">+ غسول فم</button>
+                        </div>
+                    </div>
+
+                    <!-- جدول الأدوية المضافة -->
+                    <div id="rx-meds-list" class="space-y-2 max-h-48 overflow-y-auto border rounded-xl p-3 bg-slate-50"></div>
+                </div>
+
+                <!-- الملخص المالي للزيارة وإصدار الروشتة -->
+                <div class="bg-white p-6 rounded-2xl shadow-sm flex flex-col justify-between">
+                    <div>
+                        <h2 class="text-lg font-extrabold text-teal-900 border-b pb-3 mb-4"><i class="fa-solid fa-cash-register text-teal-600 ml-2"></i>حساب الكشفية / الجلسة</h2>
+                        
+                        <div class="space-y-3 text-sm bg-slate-50 p-4 rounded-xl border">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">إجمالي تكلفة الكشفية أو الجلسة:</label>
+                                <input type="number" id="rx-fee" oninput="calcRxBalance()" class="w-full border rounded-lg px-3 py-2 font-extrabold text-teal-900 bg-white">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-600 mb-1">المبلغ المدفوع الآن من المريض:</label>
+                                <input type="number" id="rx-paid" oninput="calcRxBalance()" class="w-full border rounded-lg px-3 py-2 font-extrabold text-emerald-700 bg-white">
+                            </div>
+                            <div class="flex justify-between items-center pt-3 border-t text-base font-black">
+                                <span>المبلغ المتبقي (ذمم/أقساط):</span>
+                                <span id="rx-remaining" class="text-rose-600">0</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-4">
+                            <label class="block text-xs font-bold text-slate-600 mb-1">تعليمات إضافية للمريض أو موعد المراجعة القادم:</label>
+                            <textarea id="rx-instructions" rows="3" placeholder="مثال: تجنب المشروبات الساخنة لمدة 24 ساعة - المراجعة بعد أسبوع..." class="w-full border rounded-lg p-2.5 text-sm"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2.5 mt-6">
+                        <button onclick="saveConsultation('print')" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-md">
+                            <i class="fa-solid fa-print text-base"></i> حفظ الكشفية وطباعة الروشتة الطبية
+                        </button>
+                        <button onclick="saveConsultation('whatsapp')" class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-4 rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-md">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال الروشتة للمريض عبر واتساب
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. قسم المواعيد وطابور الانتظار الذكي -->
+            <div id="tab-appointments" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl shadow-sm">
+                    <h2 class="text-lg font-extrabold mb-4 text-teal-900"><i class="fa-solid fa-calendar-plus text-teal-600 ml-2"></i>حجز موعد جديد للمريض</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-5 gap-3">
+                        <input type="text" id="app-name" placeholder="اسم المريض" class="border rounded-xl px-3 py-2 text-sm">
+                        <input type="text" id="app-phone" placeholder="رقم الواتساب (مثال: 97059...)" class="border rounded-xl px-3 py-2 text-sm">
+                        <input type="date" id="app-date" class="border rounded-xl px-3 py-2 text-sm">
+                        <input type="time" id="app-time" class="border rounded-xl px-3 py-2 text-sm">
+                        <button onclick="addAppointment()" class="bg-teal-800 hover:bg-teal-900 text-white font-bold rounded-xl px-4 py-2 text-sm transition">
+                            <i class="fa-solid fa-plus ml-1"></i> تأكيد الحجز
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl shadow-sm overflow-x-auto">
+                    <h2 class="text-lg font-extrabold mb-4 text-teal-900">جدول المواعيد وطابور الانتظار</h2>
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-teal-50 text-teal-900">
+                            <tr>
+                                <th class="p-3 rounded-r-xl">اسم المريض</th>
+                                <th class="p-3">التاريخ والوقت</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">حالة الموعد</th>
+                                <th class="p-3 rounded-l-xl">إجراءات وتذكير واتساب</th>
+                            </tr>
+                        </thead>
+                        <tbody id="appointments-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 3. قسم سجل المرضى الإلكتروني (EMR) -->
+            <div id="tab-patients" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl shadow-sm overflow-x-auto">
+                    <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
+                        <h2 class="text-lg font-extrabold text-teal-900"><i class="fa-solid fa-folder-tree text-teal-600 ml-2"></i>السجل الطبي الشامل للمرضى (EMR)</h2>
+                        <input type="text" id="patient-search" oninput="renderPatients()" placeholder="ابحث باسم المريض أو رقم هاتفه..." class="border rounded-xl px-4 py-2 text-sm w-64">
+                    </div>
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-teal-50 text-teal-900">
+                            <tr>
+                                <th class="p-3 rounded-r-xl">اسم المريض</th>
+                                <th class="p-3">العمر</th>
+                                <th class="p-3">رقم الهاتف</th>
+                                <th class="p-3">ملاحظات طبية / حساسية</th>
+                                <th class="p-3">عدد الزيارات</th>
+                                <th class="p-3 rounded-l-xl">إجراء</th>
+                            </tr>
+                        </thead>
+                        <tbody id="patients-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 4. قسم الحسابات وأقساط المرضى -->
+            <div id="tab-finance" class="tab-content hidden space-y-6">
+                <div class="bg-white p-5 rounded-2xl shadow-sm overflow-x-auto">
+                    <div class="flex flex-wrap justify-between items-center mb-4 gap-3">
+                        <h2 class="text-lg font-extrabold text-teal-900"><i class="fa-solid fa-file-invoice-dollar text-teal-600 ml-2"></i>سجل الكشفيات، الروشتات، والأقساط المتبقية</h2>
+                        <div class="flex gap-2">
+                            <button onclick="renderConsultations('all')" class="bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-1.5 rounded-xl text-xs font-bold">كل الزيارات</button>
+                            <button onclick="renderConsultations('unpaid')" class="bg-rose-100 hover:bg-rose-200 text-rose-700 px-3 py-1.5 rounded-xl text-xs font-bold">المرضى المتبقي عليهم دفعات فقط ⚠️</button>
+                        </div>
+                    </div>
+                    <table class="w-full text-right text-sm">
+                        <thead class="bg-teal-50 text-teal-900">
+                            <tr>
+                                <th class="p-3 rounded-r-xl">رقم الملف</th>
+                                <th class="p-3">التاريخ</th>
+                                <th class="p-3">اسم المريض</th>
+                                <th class="p-3">التشخيص</th>
+                                <th class="p-3">المدفوع</th>
+                                <th class="p-3">المتبقي</th>
+                                <th class="p-3 rounded-l-xl">إجراءات الروشتة والتحصيل</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consultations-table" class="divide-y"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- 5. قسم الترخيص والنسخ الاحتياطي -->
+            <div id="tab-settings" class="tab-content hidden grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm space-y-4 border-t-4 border-teal-600">
+                    <h2 class="text-lg font-extrabold text-teal-900 border-b pb-2"><i class="fa-solid fa-certificate text-teal-600 ml-2"></i>بيانات الترخيص الرسمي للعيادة</h2>
+                    <div class="bg-teal-50/70 border border-teal-200 rounded-xl p-4 space-y-2.5 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">النسخة مرخصة لصالح:</span>
+                            <span id="lic-clinic-name" class="font-black text-teal-900"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">التخصص الطبي واللقب:</span>
+                            <span id="lic-doctor-spec" class="font-bold text-slate-800"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">عنوان وأرقام العيادة:</span>
+                            <span id="lic-clinic-phone" class="font-bold text-slate-800"></span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">العملة المعتمدة:</span>
+                            <span id="lic-currency" class="font-bold text-slate-800"></span>
+                        </div>
+                        <div class="flex justify-between pt-2 border-t border-teal-200">
+                            <span class="text-slate-600">حالة الترخيص:</span>
+                            <span class="text-teal-700 font-extrabold"><i class="fa-solid fa-circle-check"></i> ترخيص طبي مفعل مدى الحياة</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white p-6 rounded-2xl shadow-sm space-y-4 border-t-4 border-blue-600">
+                    <h2 class="text-lg font-extrabold text-slate-800 border-b pb-2"><i class="fa-solid fa-database text-blue-600 ml-2"></i>النسخ الاحتياطي لملفات المرضى</h2>
+                    <p class="text-xs text-slate-600 leading-relaxed">جميع السجلات الطبية والمواعيد والحسابات محفوظة محلياً بأمان تام على جهاز العيادة دون الحاجة للاتصال بالإنترنت.</p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="exportDatabase()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-4 rounded-xl text-sm flex items-center gap-2">
+                            <i class="fa-solid fa-download"></i> تحميل نسخة احتياطية (Backup)
+                        </button>
+                        <label class="bg-slate-800 hover:bg-slate-900 text-white font-bold py-2.5 px-4 rounded-xl text-sm flex items-center gap-2 cursor-pointer">
+                            <i class="fa-solid fa-upload"></i> استعادة ملفات العيادة
+                            <input type="file" accept=".json" onchange="importDatabase(event)" class="hidden">
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- الفوتر ولوحة المطور السرية -->
+    <footer class="bg-white border-t py-3 px-4 text-center text-xs text-slate-500 no-print mt-8">
+        <div class="max-w-7xl mx-auto flex justify-between items-center">
+            <span>نظام حكيم برو للإدارة الطبية والروشتة الإلكترونية — جميع الحقوق محفوظة</span>
+            <button id="dev-panel-btn" onclick="openDevModal()" class="text-slate-400 hover:text-teal-800 font-bold flex items-center gap-1">
+                <i class="fa-solid fa-lock"></i> لوحة المطور (توليد تراخيص العيادات)
+            </button>
+        </div>
+    </footer>
+
+    <!-- نافذة المطور لتوليد نسخ للأطباء والعيادات -->
+    <div id="dev-modal" class="fixed inset-0 bg-black/60 hidden items-center justify-center z-50 p-4 no-print">
+        <div class="bg-white rounded-2xl max-w-lg w-full p-6 shadow-2xl space-y-4">
+            <div class="flex justify-between items-center border-b pb-3">
+                <h3 class="text-lg font-black text-teal-900"><i class="fa-solid fa-user-doctor text-teal-600 ml-2"></i>مولّد تراخيص العيادات والأطباء (النسخة الأم)</h3>
+                <button onclick="closeDevModal()" class="text-gray-400 hover:text-red-500 text-xl font-bold">&times;</button>
+            </div>
+            <p class="text-xs text-slate-600 bg-teal-50 border border-teal-200 p-3 rounded-xl">
+                أدخل بيانات الدكتور أو المركز الطبي، واضغط على <strong>"توليد وتحميل نسخة العيادة"</strong>. سينزل لك ملف برنامج مستقل مختوم باسم الدكتور وترويسة الروشتة الخاصة به، وستختفي منه لوحة المطور تماماً!
+            </p>
+            <div class="space-y-3 text-sm">
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اسم العيادة أو اسم الطبيب (يظهر في الهيدر وأعلى الروشتة):</label>
+                    <input type="text" id="gen-clinic-name" placeholder="مثال: عيادة د. رامي الخطيب التخصصية" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">التخصص الطبي والدرجة العلمية (يظهر تحت اسم الدكتور بالروشتة):</label>
+                    <input type="text" id="gen-doctor-spec" placeholder="مثال: أخصائي طب وجراحة وتقويم الأسنان" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">عنوان العيادة وأرقام الحجز (يظهر أسفل الروشتة المطبوعة):</label>
+                    <input type="text" id="gen-clinic-phone" placeholder="مثال: شارع الوحدة - عمارة الشفاء | للحجز: 0590000000" class="w-full border rounded-lg px-3 py-2">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">عملة العيادة:</label>
+                        <input type="text" id="gen-currency" value="شيكل" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">سعر الكشفية الافتراضي:</label>
+                        <input type="number" id="gen-default-fee" value="50" class="w-full border rounded-lg px-3 py-2">
+                    </div>
+                </div>
+                <div class="flex items-center gap-2 pt-1">
+                    <input type="checkbox" id="gen-empty-data" class="w-4 h-4">
+                    <label for="gen-empty-data" class="text-xs font-bold text-slate-700">تسليم النسخة بسجل مرضى ومواعيد فارغ تماماً للطبيب</label>
+                </div>
+            </div>
+            <div class="pt-3 border-t">
+                <button onclick="generateClinicFile()" class="w-full bg-teal-700 hover:bg-teal-800 text-white font-bold py-3 rounded-xl text-sm transition flex justify-center items-center gap-2">
+                    <i class="fa-solid fa-file-medical"></i> توليد وتحميل نسخة العيادة الجاهزة للتسليم
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- قالب الروشتة الطبية الرسمية للطباعة (A4 / A5) -->
+    <div id="printable-rx" class="hidden max-w-2xl mx-auto bg-white p-8 border-2 border-teal-800 text-sm">
+        <div class="flex justify-between items-start border-b-2 border-teal-800 pb-4 mb-4">
+            <div>
+                <h1 id="print-clinic-name" class="text-2xl font-black text-teal-900"></h1>
+                <p id="print-doctor-spec" class="text-sm font-bold text-slate-600 mt-1"></p>
+            </div>
+            <div class="text-left text-xs text-slate-500">
+                <p class="text-3xl font-serif font-black text-teal-800">℞</p>
+                <p id="print-rx-date" class="mt-1"></p>
+                <p id="print-rx-id"></p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-3 gap-2 bg-slate-50 p-3 rounded-lg border mb-4 text-xs">
+            <div><strong>اسم المريض:</strong> <span id="print-patient-name"></span></div>
+            <div><strong>العمر:</strong> <span id="print-patient-age"></span></div>
+            <div><strong>التشخيص:</strong> <span id="print-diagnosis"></span></div>
+        </div>
+
+        <div class="min-h-[260px] py-2">
+            <h3 class="font-black text-teal-900 border-b pb-1 mb-3 text-sm">الأدوية والجرعات الموصوفة (Medications):</h3>
+            <ul id="print-meds-list" class="space-y-3 text-sm pr-2"></ul>
+
+            <div id="print-instructions-box" class="mt-6 pt-3 border-t border-dashed">
+                <strong class="text-xs text-slate-700">تعليمات طبية وملاحظات المراجعة:</strong>
+                <p id="print-instructions" class="text-xs text-slate-600 mt-1"></p>
+            </div>
+        </div>
+
+        <div class="border-t-2 border-teal-800 pt-4 mt-8 flex justify-between items-center text-xs text-slate-600">
+            <div id="print-clinic-phone" class="font-bold"></div>
+            <div class="text-center">
+                <p class="font-bold text-slate-800">توقيع وختم الطبيب</p>
+                <p class="mt-6 text-slate-400">.......................................</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        /*__CLINIC_CONFIG_START__*/
+        const clinicConfig = {
+            clinicName: "عيادة النخبة التخصصية (نسخة العرض)",
+            doctorSpec: "طب وجراحة الفم والأسنان — استشارات وعلاج",
+            phone: "العنوان: المركز الطبي الرئيسي | للحجز والاستفسار: 0590000000",
+            currency: "شيكل",
+            defaultFee: 50,
+            isClientCopy: false,
+            emptyStart: false,
+            storageKey: "hakeem_pro_master_v1"
+        };
+        /*__CLINIC_CONFIG_END__*/
+
+        const samplePatients = [
+            { id: 1, name: "أحمد محمود السعيد", age: "34 سنة", phone: "970590000000", notes: "لا يوجد حساسية دوائية" },
+            { id: 2, name: "سارة خالد منصور", age: "26 سنة", phone: "970590000000", notes: "حساسية من البنسلين" }
+        ];
+
+        const sampleAppointments = [
+            { id: 101, name: "أحمد محمود السعيد", phone: "970590000000", date: new Date().toISOString().slice(0, 10), time: "11:30", status: "waiting" },
+            { id: 102, name: "سارة خالد منصور", phone: "970590000000", date: new Date().toISOString().slice(0, 10), time: "12:15", status: "waiting" }
+        ];
+
+        const sampleConsultations = [
+            {
+                id: "90412",
+                date: new Date().toLocaleDateString('ar-EG'),
+                patientName: "أحمد محمود السعيد",
+                age: "34 سنة",
+                phone: "970590000000",
+                diagnosis: "جلسة تقويم وحشو تجميلي",
+                meds: [{ name: "Ibuprofen 400mg", dose: "حبة بعد الأكل مرتين يومياً" }],
+                instructions: "المراجعة بعد أسبوعين لاستكمال الجلسة الثانية",
+                fee: 200,
+                paid: 120,
+                remaining: 80
+            }
+        ];
+
+        const defaultDB = {
+            patients: clinicConfig.emptyStart ? [] : samplePatients,
+            appointments: clinicConfig.emptyStart ? [] : sampleAppointments,
+            consultations: clinicConfig.emptyStart ? [] : sampleConsultations
+        };
+
+        let db = JSON.parse(localStorage.getItem(clinicConfig.storageKey)) || defaultDB;
+        let currentRxMeds = [];
+
+        if (clinicConfig.isClientCopy) {
+            const devBtn = document.getElementById('dev-panel-btn');
+            if (devBtn) devBtn.remove();
+            const devModal = document.getElementById('dev-modal');
+            if (devModal) devModal.remove();
+        }
+
+        function saveDB() {
+            localStorage.setItem(clinicConfig.storageKey, JSON.stringify(db));
+            updateDashboard();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('bg-teal-500', 'text-white', 'shadow');
+                btn.classList.add('bg-teal-950/60', 'text-teal-100');
+            });
+            document.getElementById('tab-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            activeBtn.classList.remove('bg-teal-950/60', 'text-teal-100');
+            activeBtn.classList.add('bg-teal-500', 'text-white', 'shadow');
+
+            if (tabId === 'appointments') renderAppointments();
+            if (tabId === 'patients') renderPatients();
+            if (tabId === 'finance') renderConsultations('all');
+        }
+
+        function updateDashboard() {
+            const c = clinicConfig.currency;
+            document.getElementById('header-clinic-name').innerText = clinicConfig.clinicName;
+            document.getElementById('header-doctor-spec').innerText = clinicConfig.doctorSpec;
+            document.getElementById('lic-clinic-name').innerText = clinicConfig.clinicName;
+            document.getElementById('lic-doctor-spec').innerText = clinicConfig.doctorSpec;
+            document.getElementById('lic-clinic-phone').innerText = clinicConfig.phone;
+            document.getElementById('lic-currency').innerText = clinicConfig.currency;
+            document.getElementById('today-date').innerText = new Date().toLocaleDateString('ar-EG');
+
+            let totalRevenue = 0, totalUnpaid = 0, unpaidCount = 0;
+            db.consultations.forEach(con => {
+                totalRevenue += Number(con.paid) || 0;
+                if (con.remaining > 0) {
+                    totalUnpaid += Number(con.remaining);
+                    unpaidCount++;
+                }
+            });
+
+            const waitingCount = db.appointments.filter(a => a.status === 'waiting').length;
+
+            document.getElementById('stat-patients').innerText = db.patients.length;
+            document.getElementById('stat-waiting').innerText = waitingCount;
+            document.getElementById('stat-revenue').innerText = `${totalRevenue.toFixed(0)} ${c}`;
+            document.getElementById('stat-unpaid').innerText = `${totalUnpaid.toFixed(0)} ${c}`;
+
+            const wBadge = document.getElementById('waiting-badge');
+            wBadge.innerText = waitingCount;
+            wBadge.classList.toggle('hidden', waitingCount === 0);
+
+            const dBadge = document.getElementById('debt-badge');
+            dBadge.innerText = unpaidCount;
+            dBadge.classList.toggle('hidden', unpaidCount === 0);
+
+            // تحديث قائمة المرضى التلقائية
+            const dList = document.getElementById('patients-datalist');
+            dList.innerHTML = '';
+            db.patients.forEach(p => {
+                dList.innerHTML += `<option value="${p.name}">`;
+            });
+        }
+
+        function autoFillPatient() {
+            const name = document.getElementById('rx-patient-name').value.trim();
+            const found = db.patients.find(p => p.name === name);
+            if (found) {
+                document.getElementById('rx-patient-age').value = found.age || '';
+                document.getElementById('rx-patient-phone').value = found.phone || '';
+                document.getElementById('rx-patient-notes').value = found.notes || '';
+            }
+        }
+
+        function quickMed(name, dose) {
+            currentRxMeds.push({ name, dose });
+            renderRxMeds();
+        }
+
+        function addMedicineToRx() {
+            const name = document.getElementById('med-name').value.trim();
+            const dose = document.getElementById('med-dose').value.trim() || 'حسب إرشادات الطبيب';
+            if (!name) return alert('اكتب اسم الدواء أولاً!');
+            currentRxMeds.push({ name, dose });
+            document.getElementById('med-name').value = '';
+            document.getElementById('med-dose').value = '';
+            renderRxMeds();
+        }
+
+        function removeRxMed(idx) {
+            currentRxMeds.splice(idx, 1);
+            renderRxMeds();
+        }
+
+        function renderRxMeds() {
+            const container = document.getElementById('rx-meds-list');
+            container.innerHTML = '';
+            if (currentRxMeds.length === 0) {
+                container.innerHTML = '<p class="text-center text-xs text-slate-400 py-4">لم تتم إضافة أدوية للروشتة بعد</p>';
+                return;
+            }
+            currentRxMeds.forEach((m, i) => {
+                container.innerHTML += `
+                    <div class="flex justify-between items-center bg-white border p-2.5 rounded-lg text-xs">
+                        <div>
+                            <span class="font-black text-teal-900">℞ ${m.name}</span>
+                            <span class="text-slate-600 mr-2">— ${m.dose}</span>
+                        </div>
+                        <button onclick="removeRxMed(${i})" class="text-rose-500 font-bold hover:text-rose-700">حذف</button>
+                    </div>`;
+            });
+        }
+
+        function calcRxBalance() {
+            const fee = parseFloat(document.getElementById('rx-fee').value) || 0;
+            const paid = parseFloat(document.getElementById('rx-paid').value) || 0;
+            const rem = Math.max(0, fee - paid);
+            document.getElementById('rx-remaining').innerText = `${rem.toFixed(0)} ${clinicConfig.currency}`;
+        }
+
+        function saveConsultation(mode) {
+            const patientName = document.getElementById('rx-patient-name').value.trim();
+            const age = document.getElementById('rx-patient-age').value.trim() || 'غير محدد';
+            const phone = document.getElementById('rx-patient-phone').value.trim();
+            const notes = document.getElementById('rx-patient-notes').value.trim() || 'لا يوجد';
+            const diagnosis = document.getElementById('rx-diagnosis').value.trim() || 'فحص واستشارة طبية';
+            const instructions = document.getElementById('rx-instructions').value.trim();
+            const fee = parseFloat(document.getElementById('rx-fee').value) || 0;
+            const paid = parseFloat(document.getElementById('rx-paid').value) || 0;
+            const remaining = Math.max(0, fee - paid);
+
+            if (!patientName) return alert('يرجى إدخال اسم المريض أولاً!');
+
+            // حفظ أو تحديث سجل المريض تلقائياً
+            let existingPt = db.patients.find(p => p.name === patientName);
+            if (!existingPt) {
+                db.patients.unshift({ id: Date.now(), name: patientName, age, phone, notes });
+            } else {
+                existingPt.age = age;
+                existingPt.phone = phone;
+                existingPt.notes = notes;
+            }
+
+            const newConsultation = {
+                id: Date.now().toString().slice(-5),
+                date: new Date().toLocaleDateString('ar-EG'),
+                patientName,
+                age,
+                phone,
+                diagnosis,
+                meds: [...currentRxMeds],
+                instructions,
+                fee,
+                paid,
+                remaining
+            };
+
+            db.consultations.unshift(newConsultation);
+            saveDB();
+
+            if (mode === 'whatsapp') {
+                sendRxWhatsApp(newConsultation);
+            } else {
+                printRx(newConsultation.id);
+            }
+
+            // تفريغ الحقول لكشفية جديدة
+            document.getElementById('rx-patient-name').value = '';
+            document.getElementById('rx-patient-age').value = '';
+            document.getElementById('rx-patient-phone').value = '';
+            document.getElementById('rx-patient-notes').value = '';
+            document.getElementById('rx-diagnosis').value = '';
+            document.getElementById('rx-instructions').value = '';
+            document.getElementById('rx-fee').value = clinicConfig.defaultFee;
+            document.getElementById('rx-paid').value = clinicConfig.defaultFee;
+            currentRxMeds = [];
+            renderRxMeds();
+            calcRxBalance();
+        }
+
+        function printRx(conId) {
+            const con = db.consultations.find(c => c.id === conId);
+            if (!con) return;
+
+            document.getElementById('print-clinic-name').innerText = clinicConfig.clinicName;
+            document.getElementById('print-doctor-spec').innerText = clinicConfig.doctorSpec;
+            document.getElementById('print-clinic-phone').innerText = clinicConfig.phone;
+            document.getElementById('print-rx-date').innerText = `التاريخ: ${con.date}`;
+            document.getElementById('print-rx-id').innerText = `رقم الروشتة: #${con.id}`;
+            document.getElementById('print-patient-name').innerText = con.patientName;
+            document.getElementById('print-patient-age').innerText = con.age;
+            document.getElementById('print-diagnosis').innerText = con.diagnosis;
+
+            const medsUl = document.getElementById('print-meds-list');
+            medsUl.innerHTML = '';
+            if (con.meds.length === 0) {
+                medsUl.innerHTML = '<li class="text-slate-500">لا توجد أدوية موصوفة في هذه الزيارة.</li>';
+            } else {
+                con.meds.forEach(m => {
+                    medsUl.innerHTML += `
+                        <li class="border-b pb-2">
+                            <div class="font-black text-base text-slate-900">• ${m.name}</div>
+                            <div class="text-xs text-slate-600 mr-4">طريقة الاستخدام: ${m.dose}</div>
+                        </li>`;
+                });
+            }
+
+            document.getElementById('print-instructions').innerText = con.instructions || 'مع تمنياتنا لكم بالشفاء العاجل.';
+
+            const rxArea = document.getElementById('printable-rx');
+            rxArea.classList.remove('hidden');
+            window.print();
+            rxArea.classList.add('hidden');
+        }
+
+        function sendRxWhatsApp(con) {
+            let msg = `*${clinicConfig.clinicName}*\n${clinicConfig.doctorSpec}\n------------------\n`;
+            msg += `*الروشتة الطبية والتعليمات العلاجية*\nالمريض: ${con.patientName}\nالتاريخ: ${con.date}\nالتشخيص: ${con.diagnosis}\n------------------\n`;
+            if (con.meds.length > 0) {
+                msg += `*الأدوية والجرعات:*\n`;
+                con.meds.forEach(m => {
+                    msg += `💊 *${m.name}*: ${m.dose}\n`;
+                });
+                msg += `------------------\n`;
+            }
+            if (con.instructions) msg += `*تعليمات الطبيب:* ${con.instructions}\n`;
+            if (con.remaining > 0) msg += `*الرصيد المتبقي للعيادة:* ${con.remaining} ${clinicConfig.currency}\n`;
+            msg += `\nمع تمنياتنا لكم بدوام الصحة والعافية!`;
+
+            const phoneParam = con.phone ? con.phone.replace(/[^0-9]/g, '') : '';
+            window.open(`https://wa.me/${phoneParam}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        // إدارة المواعيد
+        function addAppointment() {
+            const name = document.getElementById('app-name').value.trim();
+            const phone = document.getElementById('app-phone').value.trim();
+            const date = document.getElementById('app-date').value;
+            const time = document.getElementById('app-time').value;
+            if (!name || !date) return alert('يرجى إدخال اسم المريض وتاريخ الموعد!');
+
+            db.appointments.unshift({ id: Date.now(), name, phone, date, time: time || '10:00', status: 'waiting' });
+            saveDB();
+            renderAppointments();
+
+            document.getElementById('app-name').value = '';
+            document.getElementById('app-phone').value = '';
+        }
+
+        function renderAppointments() {
+            const tbody = document.getElementById('appointments-table');
+            tbody.innerHTML = '';
+            db.appointments.forEach(a => {
+                const badge = a.status === 'waiting'
+                    ? `<span class="bg-amber-100 text-amber-800 px-2.5 py-1 rounded-full text-xs font-bold">في الانتظار ⏳</span>`
+                    : `<span class="bg-emerald-100 text-emerald-800 px-2.5 py-1 rounded-full text-xs font-bold">تم الدخول ✅</span>`;
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold">${a.name}</td>
+                        <td class="p-3 text-xs font-bold text-teal-800">${a.date} | الساعة ${a.time}</td>
+                        <td class="p-3 text-xs">${a.phone || '-'}</td>
+                        <td class="p-3">${badge}</td>
+                        <td class="p-3 flex flex-wrap gap-1.5">
+                            <button onclick="completeAppointment(${a.id}, '${a.name}', '${a.phone}')" class="bg-teal-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-teal-700">إدخال للكشفية</button>
+                            <button onclick="remindAppointmentWA(${a.id})" class="bg-emerald-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-emerald-600"><i class="fa-brands fa-whatsapp"></i> تذكير بالموعد</button>
+                            <button onclick="deleteAppointment(${a.id})" class="text-rose-500 px-2 py-1 text-xs font-bold">حذف</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function completeAppointment(id, name, phone) {
+            const app = db.appointments.find(a => a.id === id);
+            if (app) app.status = 'done';
+            saveDB();
+            switchTab('rx');
+            document.getElementById('rx-patient-name').value = name;
+            document.getElementById('rx-patient-phone').value = phone;
+            autoFillPatient();
+        }
+
+        function remindAppointmentWA(id) {
+            const a = db.appointments.find(x => x.id === id);
+            if (!a) return;
+            const msg = `مرحباً بك *${a.name}*،\nنود تذكيركم بموعدكم المسجل لدى *${clinicConfig.clinicName}* بتاريخ *${a.date}* الساعة *${a.time}*.\nيرجى الحضور قبل الموعد بـ 10 دقائق. نتمنى لكم دوام الصحة!`;
+            const phoneParam = a.phone ? a.phone.replace(/[^0-9]/g, '') : '';
+            window.open(`https://wa.me/${phoneParam}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function deleteAppointment(id) {
+            db.appointments = db.appointments.filter(a => a.id !== id);
+            saveDB();
+            renderAppointments();
+        }
+
+        // إدارة سجل المرضى
+        function renderPatients() {
+            const q = document.getElementById('patient-search').value.toLowerCase();
+            const tbody = document.getElementById('patients-table');
+            tbody.innerHTML = '';
+            db.patients.filter(p => p.name.toLowerCase().includes(q) || (p.phone && p.phone.includes(q))).forEach(p => {
+                const visits = db.consultations.filter(c => c.patientName === p.name).length;
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold text-teal-900">${p.name}</td>
+                        <td class="p-3">${p.age}</td>
+                        <td class="p-3 text-xs">${p.phone || '-'}</td>
+                        <td class="p-3 text-xs text-rose-600 font-bold">${p.notes}</td>
+                        <td class="p-3 font-extrabold">${visits} زيارات</td>
+                        <td class="p-3">
+                            <button onclick="selectPatientForRx('${p.name}')" class="bg-teal-100 text-teal-800 px-3 py-1 rounded-lg text-xs font-bold hover:bg-teal-200">+ فتح كشفية جديدة</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function selectPatientForRx(name) {
+            switchTab('rx');
+            document.getElementById('rx-patient-name').value = name;
+            autoFillPatient();
+        }
+
+        // إدارة الحسابات وأقساط المرضى
+        function renderConsultations(filter) {
+            const tbody = document.getElementById('consultations-table');
+            tbody.innerHTML = '';
+            const c = clinicConfig.currency;
+            const list = filter === 'unpaid' ? db.consultations.filter(x => x.remaining > 0) : db.consultations;
+
+            list.forEach(con => {
+                const remBadge = con.remaining > 0
+                    ? `<span class="bg-rose-100 text-rose-700 px-2.5 py-1 rounded-full text-xs font-extrabold">${con.remaining} ${c} ⚠️</span>`
+                    : `<span class="bg-emerald-100 text-emerald-700 px-2.5 py-1 rounded-full text-xs font-bold">خالص ✅</span>`;
+
+                const payActions = con.remaining > 0 ? `
+                    <button onclick="settleInstallment('${con.id}')" class="bg-emerald-600 text-white px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-emerald-700">تسديد القسط</button>
+                    <button onclick="remindInstallmentWA('${con.id}')" class="bg-green-500 text-white px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-green-600"><i class="fa-brands fa-whatsapp"></i> مطالبة</button>
+                ` : '';
+
+                tbody.innerHTML += `
+                    <tr class="hover:bg-slate-50">
+                        <td class="p-3 font-bold">#${con.id}</td>
+                        <td class="p-3 text-xs text-slate-500">${con.date}</td>
+                        <td class="p-3 font-bold">${con.patientName}</td>
+                        <td class="p-3 text-xs">${con.diagnosis}</td>
+                        <td class="p-3 font-bold text-emerald-700">${con.paid} ${c}</td>
+                        <td class="p-3">${remBadge}</td>
+                        <td class="p-3 flex flex-wrap gap-1">
+                            ${payActions}
+                            <button onclick="printRx('${con.id}')" class="bg-slate-200 text-slate-700 px-2.5 py-1 rounded-lg text-xs font-bold hover:bg-slate-300"><i class="fa-solid fa-print"></i> الروشتة</button>
+                        </td>
+                    </tr>`;
+            });
+        }
+
+        function settleInstallment(id) {
+            const con = db.consultations.find(c => c.id === id);
+            if (con && confirm(`هل تم استلام المبلغ المتبقي (${con.remaining} ${clinicConfig.currency}) من المريض "${con.patientName}"؟`)) {
+                con.paid = Number(con.paid) + Number(con.remaining);
+                con.remaining = 0;
+                saveDB();
+                renderConsultations('all');
+            }
+        }
+
+        function remindInstallmentWA(id) {
+            const con = db.consultations.find(c => c.id === id);
+            if (!con) return;
+            const msg = `مرحباً بك أستاذ *${con.patientName}*،\nتحية طيبة من *${clinicConfig.clinicName}*.\nنود تذكيركم بلطف بوجود رصيد متبقٍ من جلسة (${con.diagnosis}) بتاريخ ${con.date} بمبلغ قدره *${con.remaining} ${clinicConfig.currency}*.\nنتمنى لكم دوام الصحة والعافية!`;
+            const phoneParam = con.phone ? con.phone.replace(/[^0-9]/g, '') : '';
+            window.open(`https://wa.me/${phoneParam}?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function exportDatabase() {
+            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(db));
+            const a = document.createElement('a');
+            a.setAttribute("href", dataStr);
+            a.setAttribute("download", `نسخة_احتياطية_${clinicConfig.clinicName}.json`);
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+        }
+
+        function importDatabase(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    db = JSON.parse(e.target.result);
+                    saveDB();
+                    alert('تم استعادة السجل الطبي للعيادة بنجاح!');
+                    location.reload();
+                } catch (err) {
+                    alert('ملف غير صالح!');
+                }
+            };
+            reader.readAsText(file);
+        }
+
+        // لوحة المطور السرية لتوليد نسخ العيادات
+        function openDevModal() {
+            const pin = prompt("أدخل الرمز السري للمطور لفتح مولّد تراخيص العيادات:");
+            if (pin !== "2026") return alert("رمز خاطئ!");
+            document.getElementById('dev-modal').classList.remove('hidden');
+            document.getElementById('dev-modal').classList.add('flex');
+        }
+
+        function closeDevModal() {
+            document.getElementById('dev-modal').classList.add('hidden');
+            document.getElementById('dev-modal').classList.remove('flex');
+        }
+
+        function generateClinicFile() {
+            const cName = document.getElementById('gen-clinic-name').value.trim();
+            const dSpec = document.getElementById('gen-doctor-spec').value.trim() || "عيادة طبية تخصصية";
+            const cPhone = document.getElementById('gen-clinic-phone').value.trim() || "مع تمنياتنا لكم بالشفاء العاجل";
+            const cCurr = document.getElementById('gen-currency').value.trim() || "شيكل";
+            const defFee = parseFloat(document.getElementById('gen-default-fee').value) || 50;
+            const isEmpty = document.getElementById('gen-empty-data').checked;
+
+            if (!cName) return alert("يرجى كتابة اسم العيادة أو الطبيب أولاً!");
+
+            closeDevModal();
+            switchTab('rx');
+
+            let fullHtml = "<!DOCTYPE html>\n" + document.documentElement.outerHTML;
+            const startTag = "/*" + "__CLINIC_CONFIG_START__" + "*/";
+            const endTag = "/*" + "__CLINIC_CONFIG_END__" + "*/";
+
+            const newConfigBlock = `${startTag}
+        const clinicConfig = {
+            clinicName: ${JSON.stringify(cName)},
+            doctorSpec: ${JSON.stringify(dSpec)},
+            phone: ${JSON.stringify(cPhone)},
+            currency: ${JSON.stringify(cCurr)},
+            defaultFee: ${defFee},
+            isClientCopy: true,
+            emptyStart: ${isEmpty},
+            storageKey: "hakeem_clinic_" + ${Date.now()}
+        };
+        ${endTag}`;
+
+            const sIdx = fullHtml.indexOf(startTag);
+            const eIdx = fullHtml.indexOf(endTag) + endTag.length;
+            fullHtml = fullHtml.substring(0, sIdx) + newConfigBlock + fullHtml.substring(eIdx);
+
+            const blob = new Blob([fullHtml], { type: "text/html;charset=utf-8" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `نظام_عيادة_${cName.replace(/\s+/g, '_')}.html`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            alert(`تم توليد وتحميل نسخة "${cName}" بنجاح!`);
+        }
+
+        // تهيئة النظام عند التشغيل
+        document.getElementById('rx-fee').value = clinicConfig.defaultFee;
+        document.getElementById('rx-paid').value = clinicConfig.defaultFee;
+        document.getElementById('app-date').value = new Date().toISOString().slice(0, 10);
+        updateDashboard();
+        renderRxMeds();
+        calcRxBalance();
+    </script>
+</body>
+</html>
